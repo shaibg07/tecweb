@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.1//EN”
+“http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd”>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title> Variables php </title>
+    </head>
+
+    <body>
+        <h1>Variables en php</h1>
+        <h2>1-.Determina cual de las siguientes variables son validas y explica por qué:</h2>
+        <?php
+            echo '$_myvar: Si es, porque comienza con $ y despues tiene un _';
+            echo "<br>";
+            echo '$_7var: No es, unque el nombre de una variable puede comenzar con un guion bajo (_), el siguiente carácter no puede ser un número. ';
+            echo "<br>";
+            echo 'myvar: No es porque no comuenza con $';
+            echo "<br>";
+            echo '$myvar:  Si es, porque comienza con $ y despues empieza con una letra';
+            echo "<br>";
+            echo '$var7:  Si es, porque comienza con $ y despues empieza con una letra.';
+            echo "<br>";
+            echo '$_element1:  Si es, porque comienza con $ y despues tiene un _';
+            echo "<br>";
+            echo '$house*5: La variable $house*5: No es válida porque el * no está permitido en los nombres de las variables.';
+        ?>
+
+        <h2>2-. Proporciona los valores de $a, $b, $c com sigue:</h2>
+        <?php
+            $a = "ManejadorSQL";
+            $b = 'MySQL';
+            $c = &$a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c";
+        ?>
+        <h3>b. Agregar nuevas asignaciones</h3>
+        <h3>c. Mostrar contenido</h3>
+        <?php
+            $a = "PHP server";
+            $b = &$a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c";
+        ?>
+
+        <h3>d. Describir que ocurrió en el segundo bloque de asignaciones</h3>
+        <?php
+            echo "La variable \$a cambia su valor a 'PHP server' y como las variables \$b y \$c son referencias de \$a, toman el mismo valor";
+            unset($a, $b, $c)
+        ?>
+
+        <h2>3-.Mostrar contenido de varibles despues de la asignación</h2>
+        <?php
+            $a = "PHP5";
+            echo "Variable \$a: $a <br>";
+            
+            $z[] = &$a;
+            print_r($z);
+            echo "<br>";
+            
+            $b = "5a version de PHP";
+            echo "Variable \$b: $b <br>";
+            
+            @$c = $b*10;
+            echo "Variable \$c: $c <br>";
+            
+            $a .= $b;
+            echo "Variable \$a: $a <br>";
+            
+            @$b *= $c;
+            echo "Variable \$b: $b <br>";
+            
+            $z[0] = "MySQL";
+            print_r($z);
+
+            unset($a, $b, $c, $z)
+        ?>
+        
+        <h2>4-.Mostrar contenido de varibles despues de la asignación con $GLOBALS</h2>
+        <?php
+            $a = "PHP5";
+            echo "Variable \$a:" . $GLOBALS['a'] . "<br>";
+                        
+            $z[] = &$a;
+            print_r($GLOBALS['z']);
+            echo "<br>";
+                        
+            $b = "5a version de PHP";
+            echo "Variable \$b:" . $GLOBALS['b'] . "<br>";
+                        
+            @$c = $b*10;
+            echo "Variable \$c:" . $GLOBALS['c'] . "<br>";
+                        
+            $a .= $b;
+            echo "Variable \$a:" . $GLOBALS['a'] . "<br>";
+                        
+            @$b *= $c;
+            echo "Variable \$b:" . $GLOBALS['b'] . "<br>";
+                        
+            $z[0] = "MySQL";
+            print_r($GLOBALS['z']);
+
+            unset($a, $b, $c, $z)
+        ?>
+
+        <h2>5-.Dar valor a variables $a, $b, $c</h2>
+        <?php
+            $a = "7 personas";
+            $b = (integer) $a;
+            $a = "9e3";
+            $c = (double) $a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c"; 
+        ?>
+
+        <h2>6-.Comprobar el valor booleano de las variables $a, $b, $c, $d, $e, $f</h2>
+        <?php
+            $a = "0";
+            $b = "TRUE";
+            $c = FALSE;
+            $d = ($a OR $b);
+            $e = ($a AND $c);
+            $f = ($a XOR $b);
+            
+            echo "Variable \$a: ", var_dump($a);
+            echo "<br>";
+            echo "Variable \$b: ", var_dump($b);
+            echo "<br>";
+            echo "Variable \$c: ", var_dump($c);
+            echo "<br>";
+            echo "Variable \$d: ", var_dump($d);
+            echo "<br>";
+            echo "Variable \$e: ", var_dump($e);
+            echo "<br>";
+            echo "Variable \$f: ", var_dump($f);
+        ?>
+
+        <h3>6.1 tranformar valor booleano</h3>
+        <?php
+            echo "Variable \$c: " . (int)$c;
+            echo "<br>";
+            echo "Variable \$e: " . (int)$e;
+        ?>
+
+        <h2>7-. Uso de variable $_SERVER</h2>
+        <h3>a.</h3>
+        <?php
+            echo "Versión de apache: " . $_SERVER['SERVER_SOFTWARE'];
+            echo "<br>";
+            echo "Versión de php: " . phpversion();
+        ?>
+
+        <h3>b.</h3>
+        <?php
+            echo "Nombre del sistema operativo: " . PHP_OS;
+        ?>
+
+        <h3>c.</h3>
+        <?php
+            echo "Idioma de navegador: " . $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        ?>
+    </body>
+</html>
