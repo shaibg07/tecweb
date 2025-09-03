@@ -10,7 +10,7 @@
 
     <body>
         <h1>Variables en php</h1>
-        <h2>1-.Determina cuål de las siguientes variables son vålidas y explica por qué:</h2>
+        <h2>1-.Determina cual de las siguientes variables son validas y explica por qué:</h2>
         <?php
             echo '$_myvar: Si es, porque comienza con $ y despues tiene un _';
             echo "<br>";
@@ -118,6 +118,28 @@
             echo "Variable \$a: $a <br>";
             echo "Variable \$b: $b <br>";
             echo "Variable \$c: $c"; 
+        ?>
+
+        <h2>6-.Comprobar el valor booleano de las variables $a, $b, $c, $d, $e, $f</h2>
+        <?php
+            $a = "0";
+            $b = "TRUE";
+            $c = FALSE;
+            $d = ($a OR $b);
+            $e = ($a AND $c);
+            $f = ($a XOR $b);
+            
+            echo "Variable \$a: ", var_dump($a);
+            echo "<br>";
+            echo "Variable \$b: ", var_dump($b);
+            echo "<br>";
+            echo "Variable \$c: ", var_dump($c);
+            echo "<br>";
+            echo "Variable \$d: ", var_dump($d);
+            echo "<br>";
+            echo "Variable \$e: ", var_dump($e);
+            echo "<br>";
+            echo "Variable \$f: ", var_dump($f);
         ?>
     </body>
 </html>
