@@ -141,5 +141,12 @@
             echo "<br>";
             echo "Variable \$f: ", var_dump($f);
         ?>
+
+        <h3>6.1 tranformar valor booleano</h3>
+        <?php
+            echo "Variable \$c: " . (int)$c;
+            echo "<br>";
+            echo "Variable \$e: " . (int)$e;
+        ?>
     </body>
 </html>
