@@ -37,5 +37,22 @@
             echo "Variable \$b: $b <br>";
             echo "Variable \$c: $c";
         ?>
+        <h3>b. Agregar nuevas asignaciones</h3>
+        <h3>c. Mostrar contenido</h3>
+        <?php
+            $a = "PHP server";
+            $b = &$a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c";
+        ?>
+
+        <h3>d. Describir que ocurrió en el segundo bloque de asignaciones</h3>
+        <?php
+            echo "La variable \$a cambia su valor a 'PHP server' y como las variables \$b y \$c son referencias de \$a, toman el mismo valor";
+            unset($a, $b, $c)
+        ?>
+
     </body>
 </html>
