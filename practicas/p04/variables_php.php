@@ -148,5 +148,23 @@
             echo "<br>";
             echo "Variable \$e: " . (int)$e;
         ?>
+
+        <h2>7-. Uso de variable $_SERVER</h2>
+        <h3>a.</h3>
+        <?php
+            echo "Versión de apache: " . $_SERVER['SERVER_SOFTWARE'];
+            echo "<br>";
+            echo "Versión de php: " . phpversion();
+        ?>
+
+        <h3>b.</h3>
+        <?php
+            echo "Nombre del sistema operativo: " . PHP_OS;
+        ?>
+
+        <h3>c.</h3>
+        <?php
+            echo "Idioma de navegador: " . $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        ?>
     </body>
 </html>
