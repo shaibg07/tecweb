@@ -26,5 +26,16 @@
             echo "<br>";
             echo '$house*5: La variable $house*5: No es válida porque el * no está permitido en los nombres de las variables.';
         ?>
+
+        <h2>2-. Proporciona los valores de $a, $b, $c com sigue:</h2>
+        <?php
+            $a = "ManejadorSQL";
+            $b = 'MySQL';
+            $c = &$a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c";
+        ?>
     </body>
 </html>
