@@ -54,5 +54,32 @@
             unset($a, $b, $c)
         ?>
 
+        <h2>Inciso 3: Mostrar contenido de varibles despues de la asignación</h2>
+        <?php
+            $a = "PHP5";
+            echo "Variable \$a: $a <br>";
+            
+            $z[] = &$a;
+            print_r($z);
+            echo "<br>";
+            
+            $b = "5a version de PHP";
+            echo "Variable \$b: $b <br>";
+            
+            @$c = $b*10;
+            echo "Variable \$c: $c <br>";
+            
+            $a .= $b;
+            echo "Variable \$a: $a <br>";
+            
+            @$b *= $c;
+            echo "Variable \$b: $b <br>";
+            
+            $z[0] = "MySQL";
+            print_r($z);
+
+            unset($a, $b, $c, $z)
+        ?>
+        
     </body>
 </html>
