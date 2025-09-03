@@ -107,5 +107,17 @@
 
             unset($a, $b, $c, $z)
         ?>
+
+        <h2>5-.Dar valor a variables $a, $b, $c</h2>
+        <?php
+            $a = "7 personas";
+            $b = (integer) $a;
+            $a = "9e3";
+            $c = (double) $a;
+            
+            echo "Variable \$a: $a <br>";
+            echo "Variable \$b: $b <br>";
+            echo "Variable \$c: $c"; 
+        ?>
     </body>
 </html>
