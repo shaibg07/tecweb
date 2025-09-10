@@ -1,99 +1,130 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
+    <meta charset="utf-8">
     <title>Registro al Concurso</title>
     <style type="text/css">
-        ol, ul { 
-      list-style-type: none;
-        }
+      ol, ul {
+        list-style-type: none;
+      }
+      
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;     
+        min-height: 100vh;      
+        margin: 0;               
+      }
+      
+      .principal {
+        margin-top: 10%;
+        margin-bottom: 10%;
+        border: 2px solid #000;
+        width: 50%;
+        text-align: left; 
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      #boton_enviar{
+        align-items: center;
+      }
+
+      .botones{
+        text-align: center;
+      }
     </style>
   </head>
 
   <body>
-
-    <h1>Registro al Concurso &ldquo;Chidos mis Tenis&rdquo;</h1>
-
-    <p>¿Quieres cambiar tus viejos tenis por un par personalizado de Tenis Mike&#174;?<br><br>Justifica el por qué tus tenis se <em>tienen que</em> ir y tú puedes ser uno de los diez afortunados ganadores.</p>
-
-    <form action="http://52.43.117.247/neo/classroom/tw/concurso.php" method="post">
-
-      <h2>Información del Participante</h2>
-      <ul>
-          <li>
-              <label for="nombre">Nombre:</label>
-              <input type="text" id="nombre" name="nombre_participante">
-          </li>
-          <li>
-              <label for="email">Dirección de E-mail:</label>
-              <input type="email" id="email" name="email_participante">
-          </li>
-          <li>
-              <label for="telefono">Número Telefónico:</label>
-              <input type="tel" id="telefono" name="telefono_participante">
-          </li>
-          <li>
-              <label for="razon">Mis tenis son tan feos porque...</label><br>
-              <textarea id="razon" name="razon_tenis" rows="4" cols="60"></textarea>
-          </li>
-      </ul>
-
-      <hr>
-
-      <h2>Diseña tus Mike personalizados:</h2>
-
-      <h3>Diseño personalizado del Tenis</h3>
+    <div class="principal">
+      <h1>Registro al Concurso &ldquo;Chidos mis Tenis&rdquo;</h1>
       
-      <p>Color <em>(escoge uno)</em>:</p>
-      <ul>
-          <li>
-              <input type="radio" id="rojo" name="color" value="rojo">
-              <label for="rojo">Rojo</label>
-          </li>
-          <li>
-              <input type="radio" id="azul" name="color" value="azul">
-              <label for="azul">Azul</label>
-          </li>
-          <li>
-              <input type="radio" id="negro" name="color" value="negro">
-              <label for="negro">Negro</label>
-          </li>
-          <li>
-              <input type="radio" id="plateado" name="color" value="plateado">
-              <label for="plateado">Plateado</label>
-          </li>
-      </ul>
+      <p>¿Quieres cambiar tus viejos tenis por un par personalizado de Tenis Mike&#174;?<br><br>Justifica el por qué tus tenis se <em>tienen que</em> ir y tú puedes ser uno de los diez afortunados ganadores.</p>
 
-      <p>Características <em>(escoge tantas como quieras)</em>:</p>
-      <ul>
+      <form action="http://52.43.117.247/neo/classroom/tw/concurso.php" method="post">
+
+        <h2>Información del Participante</h2>
+        <ul>
           <li>
-              <input type="checkbox" id="cordones" name="caracteristicas[]" value="cordones_brillantes">
-              <label for="cordones">Cordones brillantes</label>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre_participante">
           </li>
           <li>
-              <input type="checkbox" id="logo" name="caracteristicas[]" value="logo_metalico">
-              <label for="logo">Logo metálico</label>
+            <label for="email">Dirección de E-mail:</label>
+            <input type="email" id="email" name="email_participante">
           </li>
           <li>
-              <input type="checkbox" id="suela" name="caracteristicas[]" value="suela_luminosa">
-              <label for="suela">Suela luminosa</label>
+            <label for="telefono">Número Telefónico:</label>
+            <input type="tel" id="telefono" name="telefono_participante">
           </li>
           <li>
-              <input type="checkbox" id="wifi" name="caracteristicas[]" value="wifi_integrado">
-              <label for="wifi">WiFi integrado</label>
+            <label for="razon">Mis tenis son tan feos porque...</label><br>
+            <textarea id="razon" name="razon_tenis" rows="4" cols="60" placeholder="No más de 300 carecteres de longitud."></textarea>
           </li>
-      </ul>
+        </ul>
+
+        <hr>
+
+        <h2>Diseña tus Mike personalizados:</h2>
+        
+        <h3>Diseño personalizado del Tenis</h3>
+        
+        <p>Color <em>(escoge uno)</em>:</p>
+        <ul>
+          <li>
+            <input type="radio" id="rojo" name="color" value="rojo">
+            <label for="rojo">Rojo</label>
+          </li>
+          <li>
+            <input type="radio" id="azul" name="color" value="azul">
+            <label for="azul">Azul</label>
+          </li>
+          <li>
+            <input type="radio" id="negro" name="color" value="negro">
+            <label for="negro">Negro</label>
+          </li>
+          <li>
+            <input type="radio" id="plateado" name="color" value="plateado">
+            <label for="plateado">Plateado</label>
+          </li>
+        </ul>
+
+        <p>Características <em>(escoge tantas como quieras)</em>:</p>
+        <ul>
+          <li>
+            <input type="checkbox" id="cordones" name="caracteristicas[]" value="cordones_brillantes">
+            <label for="cordones">Cordones brillantes</label>
+          </li>
+          <li>
+            <input type="checkbox" id="logo" name="caracteristicas[]" value="logo_metalico">
+            <label for="logo">Logo metálico</label>
+          </li>
+          <li>
+            <input type="checkbox" id="suela" name="caracteristicas[]" value="suela_luminosa">
+            <label for="suela">Suela luminosa</label>
+          </li>
+          <li>
+            <input type="checkbox" id="wifi" name="caracteristicas[]" value="wifi_integrado">
+            <label for="wifi">WiFi integrado</label>
+          </li>
+        </ul>
+        
+        <p>Talla</p>
+        <p>Las medidas reflejan el estándar masculino:</p>
+        <ul>
+          <li>
+            <input type="text" id="talla" name="talla_tenis">
+          </li>
+        </ul>
+        
+        <div class="botones">
+          <input id="boton_enviar" type="submit" value="Enviar Diseño">
+          <input type="reset" value="Limpiar Formulario">
+        </div>
       
-      <p>Talla</p>
-      <p>Las medidas reflejan el estándar masculino:</p>
-      <ul>
-          <li>
-              <input type="text" id="talla" name="talla_tenis">
-          </li>
-      </ul>
-      
-      <input type="submit" value="Enviar Diseño">
-    
-    </form>
+      </form>
+    </div>
   </body>
 </html>
