@@ -46,88 +46,90 @@
       <form action="http://52.43.117.247/neo/classroom/tw/concurso.php" method="post">
 
         <h2>Información del Participante</h2>
-        <ul>
-          <li>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre_participante">
-          </li>
-          <li>
-            <label for="email">Dirección de E-mail:</label>
-            <input type="email" id="email" name="email_participante">
-          </li>
-          <li>
-            <label for="telefono">Número Telefónico:</label>
-            <input type="tel" id="telefono" name="telefono_participante">
-          </li>
-          <li>
-            <label for="razon">Mis tenis son tan feos porque...</label><br>
-            <textarea id="razon" name="razon_tenis" rows="4" cols="60" placeholder="No más de 300 carecteres de longitud."></textarea>
-          </li>
-        </ul>
-
-        <hr>
+        <fieldset> <legend>Información Personal</legend>
+          <ul>
+            <li>
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre_participante">
+            </li>
+            <li>
+              <label for="email">Dirección de E-mail:</label>
+              <input type="email" id="email" name="email_participante">
+            </li>
+            <li>
+              <label for="telefono">Número Telefónico:</label>
+              <input type="tel" id="telefono" name="telefono_participante">
+            </li>
+            <li>
+              <label for="razon">Mis tenis son tan feos porque...</label><br>
+              <textarea id="razon" name="razon_tenis" rows="4" cols="60" placeholder="No más de 300 carecteres de longitud."></textarea>
+            </li>
+          </ul>
+        </fieldset>
 
         <h2>Diseña tus Mike personalizados:</h2>
-        
-        <h3>Diseño personalizado del Tenis</h3>
-        
-        <p>Color <em>(escoge uno)</em>:</p>
-        <ul>
-          <li>
-            <input type="radio" id="rojo" name="color" value="rojo">
-            <label for="rojo">Rojo</label>
-          </li>
-          <li>
-            <input type="radio" id="azul" name="color" value="azul">
-            <label for="azul">Azul</label>
-          </li>
-          <li>
-            <input type="radio" id="negro" name="color" value="negro">
-            <label for="negro">Negro</label>
-          </li>
-          <li>
-            <input type="radio" id="plateado" name="color" value="plateado">
-            <label for="plateado">Plateado</label>
-          </li>
-        </ul>
+                
+        <fieldset> <legend>Diseño personalizado del Tenis</legend>
+            <fieldset> <legend>Color <em>(escoge uno)</em>:</legend>
+              <ul>
+                <li>
+                  <input type="radio" id="rojo" name="color" value="rojo">
+                  <label for="rojo">Rojo</label>
+                </li>
+                <li>
+                  <input type="radio" id="azul" name="color" value="azul">
+                  <label for="azul">Azul</label>
+                </li>
+                <li>
+                  <input type="radio" id="negro" name="color" value="negro">
+                  <label for="negro">Negro</label>
+                </li>
+                <li>
+                  <input type="radio" id="plateado" name="color" value="plateado">
+                  <label for="plateado">Plateado</label>
+                </li>
+              </ul>
+            </fieldset>
 
-        <p>Características <em>(escoge tantas como quieras)</em>:</p>
-        <ul>
-          <li>
-            <input type="checkbox" id="cordones" name="caracteristicas[]" value="cordones_brillantes">
-            <label for="cordones">Cordones brillantes</label>
-          </li>
-          <li>
-            <input type="checkbox" id="logo" name="caracteristicas[]" value="logo_metalico" checked>
-            <label for="logo">Logo metálico</label>
-          </li>
-          <li>
-            <input type="checkbox" id="suela" name="caracteristicas[]" value="suela_luminosa">
-            <label for="suela">Suela luminosa</label>
-          </li>
-          <li>
-            <input type="checkbox" id="wifi" name="caracteristicas[]" value="wifi_integrado">
-            <label for="wifi">WiFi integrado</label>
-          </li>
-        </ul>
-        
-        <p>Talla</p>
-        <p>Las medidas reflejan el estándar masculino:</p>
-        <ul>
-          <li>
-            <select id="talla" name="talla_tenis">
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </select>
-          </li>
-        </ul>
+          <fieldset> <legend>Características <em>(escoge tantas como quieras)</em>:</legend>
+            <ul>
+              <li>
+                <input type="checkbox" id="cordones" name="caracteristicas[]" value="cordones_brillantes">
+                Cordones Brillantes
+              </li>
+              <li>
+                <input type="checkbox" id="logo" name="caracteristicas[]" value="logo_metalico" checked>
+                Logo metálico
+              </li>
+              <li>
+                <input type="checkbox" id="suela" name="caracteristicas[]" value="suela_luminosa">
+                Suela luminosa
+              </li>
+              <li>
+                <input type="checkbox" id="wifi" name="caracteristicas[]" value="wifi_integrado">
+                WIFI integreado
+              </li>
+            </ul>
+          </fieldset>
+          <fieldset> <legend>Talla</legend>
+            <p>Las medidas reflejan el estándar masculino:</p>
+            <ul>
+              <li>
+                <select id="talla" name="talla_tenis" size="1">
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                </select>
+              </li>
+            </ul>
+          </fieldset>
+        </fieldset>
         
         <div class="botones">
           <input id="boton_enviar" type="submit" value="Enviar Diseño">
