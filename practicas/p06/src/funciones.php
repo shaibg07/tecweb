@@ -1,12 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <?php
+<?php
     function multiplo_5_7(){
         if(isset($_GET['numero']))
         {
@@ -41,6 +33,33 @@
 
         echo "\n$numeros números obtenidos en $iteracion iteraciones";
     } 
+
+    function entero_aleatorio($num){
+        if ($num <= 0) {
+            echo "Inserte un número mayor que 0";
+            return;
+        }
+        $aleatorio = rand(1,1000); 
+        
+        while($aleatorio % $num != 0){
+            $aleatorio = rand (1, 1000); 
+        }
+        echo "Número aleatorio generado: $aleatorio <br>";
+        echo "¡El número $aleatorio es múltiplo de $num!<br>"; 
+    }
+
+    function entero_aleatorio_do_while($numero){
+        if ($num <= 0) {
+        echo "Inserte un número mayor que 0";
+        return;
+    }
+
+    do {
+        
+        $aleatorio = rand(1, 1000);
+    } while ($aleatorio % $num != 0); 
+
+    echo "Número aleatorio generado: $aleatorio <br>";
+    echo "¡El número $aleatorio es múltiplo de $num!<br>";
+    }
 ?>
-</body>
-</html>

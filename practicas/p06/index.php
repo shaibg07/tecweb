@@ -21,6 +21,22 @@ secuencia compuesta por: impar, par, impar</h2>
         generacion_repetitiva();
     ?>
 
+    <h2>Ejercicios 3: Utiliza un ciclo while para encontrar el primer número entero obtenido aleatoriamente,
+pero que además sea múltiplo de un número dado.</h2>
+    <?php
+        echo '<h3>Uso de while</h3>';
+        if(isset($_GET['num']))
+        {
+            entero_aleatorio($_GET['num']); 
+        }
+        echo '<h3>Uso de do-while</h3>';
+        if(isset($_GET['numero']))
+        {
+            entero_aleatorio($_GET['numero']);
+        }
+
+    ?>
+
     <h2>Ejemplo de POST</h2>
     <form action="http://localhost/tecweb/practicas/p06/index.php" method="post">
         Name: <input type="text" name="name"><br>
