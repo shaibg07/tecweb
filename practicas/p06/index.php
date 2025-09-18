@@ -25,6 +25,42 @@
             border: 1px solid #ddd; 
             padding: 8px; 
         }
+        .form-container {
+            font-family: sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 400px; /* Ancho máximo del formulario */
+        }
+        .form-container label {
+            display: block; /* Hace que la etiqueta ocupe su propia línea */
+            margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+            font-weight: bold;
+            color: #333;
+        }
+        .form-container input[type="text"],
+        .form-container select {
+            width: 100%; /* Ocupa todo el ancho disponible */
+            padding: 10px; /* Relleno interno */
+            margin-bottom: 15px; /* Espacio debajo de cada campo */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50; /* Mismo verde que la tabla */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer; /* Cambia el cursor a una manita */
+            font-size: 16px;
+        }
+        .form-container button:hover {
+            background-color: #45a049; /* Un verde un poco más oscuro al pasar el mouse */
+        }
     </style>
 </head>
 <body>
@@ -61,6 +97,39 @@ el valor en cada índice.</h2>
             arregloAscii();
         ?>
 
+    <h2>Ejercicio 5: Usar las variables $edad y $sexo en una instrucción if para identificar una persona de
+sexo “femenino”, cuya edad oscile entre los 18 y 35 años y mostrar un mensaje de
+bienvenida apropiado.</h2>
+
+        <div class="form-container">
+        <form action="index.php" method="post">
+            <label for="edad">Edad:</label>
+            <input type="text" name="edad" id="edad" required>
+            
+            <label for="sexo">Sexo:</label>
+            <select name="sexo" id="sexo">
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+            </select>
+            
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+        <?php
+            if ($_SERVER["REQUEST_METHOD"] == "POST") { 
+                if (isset($_POST['edad']) && isset($_POST['sexo'])) {
+                    
+                    $edad = $_POST['edad'];
+                    $sexo = $_POST['sexo'];
+
+                    $mensaje = mayorEdad($edad, $sexo);
+
+                    echo "<h3>Resultado:</h3>";
+                    echo "Su edad es: $edad años y su sexo es $sexo.<br>";
+                    echo "<p>$mensaje</p>";
+                }
+            }
+        ?>
     <h2>Ejemplo de POST</h2>
     <form action="http://localhost/tecweb/practicas/p06/index.php" method="post">
         Name: <input type="text" name="name"><br>
