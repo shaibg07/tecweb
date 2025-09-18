@@ -61,6 +61,43 @@
         .form-container button:hover {
             background-color: #45a049; /* Un verde un poco más oscuro al pasar el mouse */
         }
+
+        .form-busqueda {
+            font-family: sans-serif;
+            background-color: #f0f8ff; /* Un color azul claro para diferenciarlo */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin-top: 20px;
+        }
+        .form-busqueda label {
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+        .form-busqueda input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .form-busqueda button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007BFF; /* Color primario azul */
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .form-busqueda button[name="todos"] {
+            background-color: #6c757d; /* Un color secundario gris */
+            margin-top: 10px;
+        }
+        .form-busqueda button:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -130,19 +167,55 @@ bienvenida apropiado.</h2>
                 }
             }
         ?>
-    <h2>Ejemplo de POST</h2>
-    <form action="http://localhost/tecweb/practicas/p06/index.php" method="post">
-        Name: <input type="text" name="name"><br>
-        E-mail: <input type="text" name="email"><br>
-        <input type="submit">
-    </form>
-    <br>
+
+        <h2>Ejercicio 6 </h2>
+        <p>Crea en código duro un arreglo asociativo que sirva para registrar el parque vehicular de
+        una ciudad. Cada vehículo debe ser identificado por:
+        <ul>
+            <li>Matricula</li>
+            <li>Auto</li>
+            <ul>
+                <li>Marca</li>
+                <li>Modelo</li>
+                <li>Tipo (sedan|hachback|camioneta)</li>
+            </ul>
+            <li>Propietario</li>
+            <ul>
+                <li>Nombre</li>
+                <li>Ciudad</li>
+                <li>Dirección</li>
+            </ul>
+        </ul> 
+        <p>La matrícula debe tener el siguiente formato LLLNNNN, donde las L pueden ser letras de
+    la A-Z y las N pueden ser números de 0-9.</p>
     <?php
-        if(isset($_POST["name"]) && isset($_POST["email"]))
-        {
-            echo $_POST["name"];
-            echo '<br>';
-            echo $_POST["email"];
+        echo "<h3>Arreglo con print_r:</h3>";
+        print_r($autos); 
+    ?>
+    <h3>Consulta Auto</h3>
+    <div class="form-busqueda">
+        <form action="index.php" method="post">
+            <div>
+                <label for="matricula">Buscar por matrícula:</label>
+                <input type="text" id="matricula" name="matricula" placeholder="Ejemplo: ABC1001">
+                <button type="submit" name="buscar">Buscar</button>
+            </div>
+            <br>
+            <div>
+                <button type="submit" name="todos">Ver todos los autos</button>
+            </div>
+        </form>
+    </div>
+
+    <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST["buscar"])) {
+                $matricula = $_POST["matricula"];
+                autoMatricula($matricula);
+            } elseif (isset($_POST["todos"])) {
+                echo "<h2>Todos los Autos Registrados</h2>";
+                todosLosAutos();
+            }
         }
     ?>
 </body>
