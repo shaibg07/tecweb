@@ -7,6 +7,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Práctica 6</title>
+    <style> 
+        table {
+            border-collapse: collapse; 
+            width: 250px; 
+            margin: 20px 0; 
+            font-family: sans-serif;
+            text-align: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); 
+        }
+        th {
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 12px; 
+        }
+        td{
+            border: 1px solid #ddd; 
+            padding: 8px; 
+        }
+    </style>
 </head>
 <body>
     <h2>Ejercicio 1</h2>
@@ -34,8 +53,13 @@ pero que además sea múltiplo de un número dado.</h2>
         {
             entero_aleatorio($_GET['numero']);
         }
-
     ?>
+    <h2>Ejercicio 4: Crear un arreglo cuyos índices van de 97 a 122 y cuyos valores son las letras de la ‘a’
+a la ‘z’. Usa la función chr(n) que devuelve el caracter cuyo código ASCII es n para poner
+el valor en cada índice.</h2>
+        <?php
+            arregloAscii();
+        ?>
 
     <h2>Ejemplo de POST</h2>
     <form action="http://localhost/tecweb/practicas/p06/index.php" method="post">

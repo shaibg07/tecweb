@@ -62,4 +62,18 @@
     echo "Número aleatorio generado: $aleatorio <br>";
     echo "¡El número $aleatorio es múltiplo de $num!<br>";
     }
+
+    function arregloAscii(){
+        $indices=[]; 
+        for($i=97; $i<=122; $i++){
+            $indices[$i] = chr($i); 
+        }
+        
+        echo "<table>"; 
+        echo "<tr><th>Indice</th><th>Letra</th></tr>";
+        foreach ($indices as $key =>$value){
+            echo "<tr><td>$key</td><td>$value</td></tr>";
+        }
+        echo "</table>";
+    }
 ?>
