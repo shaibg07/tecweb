@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro productos</title>
+    <style type="text/css">
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+    }
+
+    #formularioProductos {
+        max-width: 600px;
+        margin: 20px auto; 
+        padding: 25px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        border-bottom: 2px solid #eaeaea;
+        padding-bottom: 10px;
+        margin-top: 0;
+    }
+
+    h2 {
+        font-size: 1.1em;
+        color: #555;
+    }
+
+    fieldset {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    legend {
+        padding: 0 5px;
+        font-weight: bold;
+    }
+    
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul li {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block; 
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    textarea {
+        width: 100%; 
+        padding: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box; 
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: #007BFF; 
+    }
+
+    input[type="submit"],
+    input[type="reset"] {
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        color: white;
+        margin-right: 10px;
+    }
+
+    input[type="submit"] {
+        background-color: #007BFF; 
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    input[type="reset"] {
+        background-color: #6c757d; 
+    }
+
+    input[type="reset"]:hover {
+        background-color: #5a6268;
+    }
+</style>
+</head>
+<body>
+    <h1>Registro de nuevos productos en marketzone</h1>
+    <form id="formularioProductos" action="http://localhost/tecweb/practicas/p08/set_producto.php" method="post" enctype="multipart/form-data"> 
+        <fieldset><legend><h2>Descripción del producto</h2></legend>
+            <ul>
+                <li><label for="form-nombre">Nombre del producto:</label> <input type="text" name="nombre" id="form-nombre" required></li>
+                <li><label for="form-marca">Marca del producto:</label> <input type="text" name="marca" id="form-marca" requiered></li>
+                <li><label for="form-modelo">Modelo del producto:</label> <input type="text" name="modelo" id="form-modelo" requiered></li>
+                <li><label for="form-descripcion">Descripción del producto</label><br><textarea name="descripcion" rows="4" cols="60" id="form-descripcion" placeholder="No más de 250 caracteres de longitud" requiered></textarea></li>
+            </ul>
+        </fieldset>
+        <fieldset><legend><h2>Costos</h2></legend>
+            <ul>
+                <li><label for="form-precio">Precio del producto:</label> <input type="number" name="precio" id="form-precio" requiered></li>
+                <li><label for="form-unidades">Unidades en existencia:</label> <input type="number" name="unidades" id="form-unidades" requiered></li>
+            </ul>
+        </fieldset>
+        <fieldset><legend><h2>Visuales</h2></legend>
+            <ul>
+                <li><label for="form-imagen">Imagen del producto:</label> <input type="file" name="imagen" id="form-imagen" accept="image/*" requiered></li>
+            </ul>
+        </fieldset>
+        <p>
+            <input type="submit" value="Registrar producto">
+            <input type="reset">
+          </p>
+        
+   </form>
+    
+</body>
+</html>
