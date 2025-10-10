@@ -1,71 +1,77 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
-<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Producto</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
-    <h3>PRODUCTOS</h3>
-    <br>
-    <?php
-    if (isset($_GET['tope'])) {
-        $tope = $_GET['tope'];
+<?php
+    $data = array();
+
+	if(isset($_GET['tope'])) {
+		$tope = $_GET['tope'];
     } else {
-        die('<p>Falta el parámetro "tope" en la URL.</p>');
+        die('Parámetro "tope" no detectado...');
     }
 
-    if (!empty($tope)) {
-        /** Conexión a la base de datos */
-        @$link = new mysqli('localhost', 'root', 'Tec&12Web', 'marketzone');
+	if (!empty($tope)) {
+		@$link = new mysqli('localhost', 'root', 'Tec&12Web', 'marketzone');
 
-        /** Verificar conexión */
-        if ($link->connect_errno) {
-            die('<p>Error de conexión: ' . $link->connect_error . '</p>');
-        }
+		if ($link->connect_errno) {
+			die('Falló la conexión: '.$link->connect_error.'<br/>');
+		}
 
-        /** Consulta SQL */
-        if ($result = $link->query("SELECT * FROM productos WHERE unidades <= $tope")) {
-            echo '<table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Precio</th>
-                            <th>Unidades</th>
-                            <th>Detalles</th>
-                            <th>Imagen</th>
-                        </tr>
-                    </thead>
-                    <tbody>';
-
-            /** Iterar sobre los productos obtenidos */
-            while ($row = $result->fetch_assoc()) {
-                echo '<tr>
-                        <th>' . $row['id'] . '</th>
-                        <td>' . htmlspecialchars($row['nombre']) . '</td>
-                        <td>' . htmlspecialchars($row['marca']) . '</td>
-                        <td>' . htmlspecialchars($row['modelo']) . '</td>
-                        <td>' . $row['precio'] . '</td>
-                        <td>' . $row['unidades'] . '</td>
-                        <td>' . htmlspecialchars($row['detalles']) . '</td>
-                        <td><img src="' . htmlspecialchars($row['imagen']) . '" width="100"/></td>
-                    </tr>';
+		/** Consulta SQL modificada para excluir productos eliminados */
+		if ($result = $link->query("SELECT * FROM productos WHERE unidades <= $tope AND eliminado = 0")) {
+            $row = $result->fetch_all(MYSQLI_ASSOC);
+            
+            foreach($row as $num => $registro) {
+                foreach($registro as $key => $value) {
+                    $data[$num][$key] = utf8_encode($value);
+                }
             }
 
-            echo '</tbody></table>';
+			$result->free();
+		}
 
-            /** Liberar resultados */
-            $result->free();
-        } else {
-            echo '<p>Error en la consulta.</p>';
-        }
-
-        /** Cerrar conexión */
-        $link->close();
-    }
-    ?>
-</body> 
+		$link->close();
+	}
+?>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Producto</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+	<h3>PRODUCTOS DISPONIBLES</h3>
+	<br/>
+	<?php if(isset($row) && count($row) > 0) : ?>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+				<th scope="col">#</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Marca</th>
+				<th scope="col">Modelo</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Unidades</th>
+				<th scope="col">Detalles</th>
+				<th scope="col">Imagen</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($row as $value) : ?>
+				<tr>
+					<th scope="row"><?= $value['id'] ?></th>
+					<td><?= $value['nombre'] ?></td>
+					<td><?= $value['marca'] ?></td>
+					<td><?= $value['modelo'] ?></td>
+					<td><?= $value['precio'] ?></td>
+					<td><?= $value['unidades'] ?></td>
+					<td><?= $value['detalles'] ?></td>
+					<td><img src="<?=$value['imagen'] ?>" width="100"></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	<?php else : ?>
+		<p>No hay productos disponibles.</p>
+	<?php endif; ?>
+</body>
+</html>
