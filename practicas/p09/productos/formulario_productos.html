@@ -152,15 +152,27 @@
                 </li>
             </ul>
         </fieldset>
-         <fieldset><legend><h2>Costos</h2></legend>
+        <fieldset><legend><h2>Costos</h2></legend>
             <ul>
-                <li><label for="form-precio">Precio del producto:</label> <input type="number" name="precio" id="form-precio" requiered></li>
-                <li><label for="form-unidades">Unidades en existencia:</label> <input type="number" name="unidades" id="form-unidades" requiered></li>
+                <li>
+                    <label for="form-precio">Precio del producto:</label>
+                    <input type="number" name="precio" id="form-precio" step="any" min="0">
+                    <div id="error5" class="error-mensaje"></div>
+                </li>
+                <li>
+                    <label for="form-unidades">Unidades en existencia:</label>
+                    <input type="number" name="unidades" id="form-unidades" min="0">
+                    <div id="error6" class="error-mensaje"></div>
+                </li>
             </ul>
         </fieldset>
         <fieldset><legend><h2>Visuales</h2></legend>
             <ul>
-                <li><label for="form-imagen">Imagen del producto:</label> <input type="file" name="imagen" id="form-imagen" accept="image/*" requiered></li>
+                <li>
+                    <label for="form-imagen">Imagen del producto:</label> 
+                    <input type="file" name="imagen" id="form-imagen" accept="image/*">
+                    <input type="hidden" name="imagen_defecto" id="imagen_defecto" value="img/imagen.png"> 
+                </li>
             </ul>
         </fieldset>
         <p>
