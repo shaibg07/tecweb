@@ -3,40 +3,42 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
 <?php
     $data = array();
+    @$link = new mysqli('localhost', 'root', 'Tec&12Web', 'marketzone');
 
-	if(isset($_GET['tope'])) {
-		$tope = $_GET['tope'];
-    } else {
-        die('Parámetro "tope" no detectado...');
+    if ($link->connect_errno) {
+        die('Falló la conexión: '.$link->connect_error.'<br/>');
     }
 
-	if (!empty($tope)) {
-		@$link = new mysqli('localhost', 'root', 'Tec&12Web', 'marketzone');
+    $sql = "SELECT * FROM productos WHERE eliminado = 0";
 
-		if ($link->connect_errno) {
-			die('Falló la conexión: '.$link->connect_error.'<br/>');
-		}
-
-		/** Consulta SQL modificada para excluir productos eliminados */
-		if ($result = $link->query("SELECT * FROM productos WHERE unidades <= $tope AND eliminado = 0")) {
-            $row = $result->fetch_all(MYSQLI_ASSOC);
-            
-            foreach($row as $num => $registro) {
-                foreach($registro as $key => $value) {
-                    $data[$num][$key] = utf8_encode($value);
-                }
+    if ($result = $link->query($sql)) {
+        $row = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($row as $num => $registro) {
+            foreach ($registro as $key => $value) {
+                $data[$num][$key] = utf8_encode($value);
             }
+        }
+        $result->free();
+    }
 
-			$result->free();
-		}
-
-		$link->close();
-	}
+    $link->close();
 ?>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Producto</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<script>
+		function modificarProducto(event) {
+			var row = event.target.closest("tr"); 
+			var id = row.querySelector(".id").textContent.trim();
+
+			var url = `formulario_productos_v2.php?id=${encodeURIComponent(id)}`;//se redirige con el id
+			window.location.href = url;
+		}
+	</script>
+
 </head>
 <body>
 	<h3>PRODUCTOS DISPONIBLES</h3>
@@ -53,23 +55,31 @@
 				<th scope="col">Unidades</th>
 				<th scope="col">Detalles</th>
 				<th scope="col">Imagen</th>
+				<th scope="col">Modificar</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach($row as $value) : ?>
 				<tr>
-					<th scope="row"><?= $value['id'] ?></th>
-					<td><?= $value['nombre'] ?></td>
-					<td><?= $value['marca'] ?></td>
-					<td><?= $value['modelo'] ?></td>
-					<td><?= $value['precio'] ?></td>
-					<td><?= $value['unidades'] ?></td>
-					<td><?= $value['detalles'] ?></td>
-					<td><img src="<?=$value['imagen'] ?>" width="100"></td>
+					<th class="id" scope="row"><?= $value['id'] ?></th>
+					<td class="nombre"><?= $value['nombre'] ?></td>
+					<td class="marca"><?= $value['marca'] ?></td>
+					<td class="modelo"><?= $value['modelo'] ?></td>
+					<td class="precio"><?= $value['precio'] ?></td>
+					<td class="unidades"><?= $value['unidades'] ?></td>
+					<td class="detalles"><?= $value['detalles'] ?></td>
+					<td><img class="imagen" src="<?=$value['imagen'] ?>" width="100"></td>
+					<td>
+						<button type="button" class="btn btn-warning" onclick="modificarProducto(event)">Modificar</button>
+					</td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		<?php elseif(!empty($id)) : ?>
+		<script>
+            alert('Producto inexistente ID no encontrado.');
+        </script>
 	<?php else : ?>
 		<p>No hay productos disponibles.</p>
 	<?php endif; ?>

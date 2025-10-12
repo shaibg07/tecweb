@@ -21,7 +21,7 @@
             padding: 25px;
             background: #ffffff;
             border: 1px solid #ddd;
-            border-radius: 8px; /* Borde redondeado añadido para suavizar */
+            border-radius: 8px; 
         }
 
         h1 {
@@ -41,11 +41,11 @@
             border: 1px solid #ccc;
             padding: 15px;
             margin-bottom: 20px;
-            border-radius: 5px; /* Borde redondeado añadido */
+            border-radius: 5px; 
         }
 
         legend {
-            padding: 0 10px; /* Más espaciado en la leyenda */
+            padding: 0 10px; 
             font-weight: bold;
             color: #333;
         }
@@ -66,7 +66,6 @@
             font-weight: bold;
         }
         
-        /* Se añadió 'select' para que el menú desplegable tenga el mismo estilo */
         input[type="text"],
         input[type="number"],
         input[type="file"],
@@ -75,7 +74,7 @@
             width: 100%; 
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 4px; /* Bordes redondeados para los campos */
+            border-radius: 4px; 
             box-sizing: border-box; 
         }
 
@@ -83,7 +82,7 @@
         select:focus,
         textarea:focus {
             border-color: #007BFF; 
-            outline: none; /* Quita el contorno por defecto */
+            outline: none;
         }
 
         input[type="submit"],
@@ -113,7 +112,6 @@
             background-color: #5a6268;
         }
 
-        /* Estilo para los mensajes de error de JavaScript */
         .error-mensaje {
             color: red;
             font-size: 0.9em;
@@ -122,66 +120,74 @@
     </style>
 </head>
 <body>
-    <h1>Registro de nuevos productos en marketzone</h1>
-    <form id="formularioProductos" action="http://localhost/tecweb/practicas/p08/set_producto_v2.php" method="post" enctype="multipart/form-data"> 
+    <?php
+        $product = null;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $id = $_GET['id'];
+        
+            @$link = new mysqli('localhost', 'root', 'Tec&12Web', 'marketzone');
+            if ($link->connect_errno) {
+                die('Falló la conexión: '.$link->connect_error);
+            }
+        
+            $stmt = $link->prepare("SELECT * FROM productos WHERE id = ? AND eliminado = 0");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $product = $result->fetch_assoc();
+        
+            $stmt->close();
+            $link->close();
+        }
+
+        if (!$product) {
+            header("Location: get_productos_vigentes_v2.php?error=ProductoNoEncontrado");
+            exit();
+        }
+    ?>
+    <h1>Actualización de productos en marketzone</h1>
+    <form id="formularioProductos" action="http://localhost/tecweb/practicas/p09/productos/update_producto.php" method="post" enctype="multipart/form-data"> 
+        <input type="hidden" name="id" value="<?= isset($product['id']) ? htmlspecialchars($product['id']) : '' ?>">
         <fieldset><legend><h2>Descripción del producto</h2></legend>
             <ul>
-                <li>
-                    <label for="form-nombre">Nombre del producto:</label>
-                    <input type="text" name="nombre" id="form-nombre">
-                    <div id="error1" class="error-mensaje"></div>
-                </li>
+                <li><label for="form-nombre">Nombre del producto:</label> 
+                    <input type="text" name="nombre" id="form-nombre" value="<?= isset($product) ? $product['nombre'] : ''?>"><div id="error1" style="color: red;"></div></li>
                 <li>
                     <label for="form-marca">Marca del producto:</label> 
                     <select name="marca" id="form-marca">
                         <option value="">Seleccione una marca</option>
-                        <option value="Lenovo">Lenovo</option>
-                        <option value="HP">HP</option>
-                        <option value="Mac">Mac</option>
-                    </select>
-                    <div id="error2" class="error-mensaje"></div>
+                        <option value="Fender" <?= isset($product) && $product['marca'] == 'Lenovo' ? 'selected' : '' ?>>Lenovo</option>
+                        <option value="Gibson" <?= isset($product) && $product['marca'] == 'HP' ? 'selected' : '' ?>>HP</option>
+                        <option value="Yamaha" <?= isset($product) && $product['marca'] == 'Mac' ? 'selected' : '' ?>>Mac</option>
+                    </select><div id="error2" style="color: red;"></div>
                 </li>
-                <li>
-                    <label for="form-modelo">Modelo del producto:</label>
-                    <input type="text" name="modelo" id="form-modelo">
-                    <div id="error3" class="error-mensaje"></div>
-                </li>
-                <li>
-                    <label for="form-descripcion">Descripción del producto</label>
-                    <textarea name="descripcion" rows="4" cols="60" id="form-descripcion" placeholder="No más de 250 caracteres de longitud"></textarea>
-                    <div id="error4" class="error-mensaje"></div>
-                </li>
+                <li><label for="form-modelo">Modelo del producto:</label> <input type="text" name="modelo" id="form-modelo" value="<?= isset($product) ? $product['modelo'] : '' ?>"><div id="error3" style="color: red;"></div></li>
+                <li><label for="form-descripcion">Descripción del producto</label><br><textarea name="descripcion" rows="4" cols="60" id="form-descripcion"><?= isset($product) ? $product['detalles'] : '' ?></textarea><div id="error4" style="color: red;"></div></li>
             </ul>
         </fieldset>
         <fieldset><legend><h2>Costos</h2></legend>
             <ul>
-                <li>
-                    <label for="form-precio">Precio del producto:</label>
-                    <input type="number" name="precio" id="form-precio" step="any" min="0">
-                    <div id="error5" class="error-mensaje"></div>
-                </li>
-                <li>
-                    <label for="form-unidades">Unidades en existencia:</label>
-                    <input type="number" name="unidades" id="form-unidades" min="0">
-                    <div id="error6" class="error-mensaje"></div>
-                </li>
+                <li><label for="form-precio">Precio del producto:</label> <input type="number" name="precio" id="form-precio" value="<?= isset($product) ? $product['precio'] : '' ?>" step="any" min="0"><div id="error5" style="color: red;"></div></li>
+                <li><label for="form-unidades">Unidades en existencia:</label> <input type="number" name="unidades" id="form-unidades" value="<?= isset($product) ? $product['unidades'] : '' ?>"><div id="error6" style="color: red;"></div></li>
             </ul>
         </fieldset>
         <fieldset><legend><h2>Visuales</h2></legend>
             <ul>
-                <li>
-                    <label for="form-imagen">Imagen del producto:</label> 
+                <li><label for="form-imagen">Imagen del producto:</label> 
                     <input type="file" name="imagen" id="form-imagen" accept="image/*">
-                    <input type="hidden" name="imagen_defecto" id="imagen_defecto" value="img/imagen.png"> 
+                    <input type="hidden" name="imagen_defecto" id="imagen_defecto" value="<?= isset($product) ? $product['imagen'] : 'img/imagen.png' ?>">
+                    <?php if (!empty($product['imagen'])): ?>
+                        <p>Ruta de la imagen: <?= htmlspecialchars($product['imagen']); ?></p>
+                    <?php endif; ?>
                 </li>
             </ul>
         </fieldset>
         <p>
-            <input type="submit" value="Registrar producto">
+            <input type="submit" value="Modificar producto">
             <input type="reset">
         </p>
+        
     </form>
-    
     <script src="./validacion.js"></script>
 </body>
 </html>
