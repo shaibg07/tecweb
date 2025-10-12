@@ -15,10 +15,10 @@ $link->set_charset('utf8mb4');
 $nombre = $_POST['nombre'];
 $marca  = $_POST['marca'];
 $modelo = $_POST['modelo'];
-$precio = $_POST['precio'];
-$detalles = $_POST['detalles'];
-$unidades = $_POST['unidades'];
-$imagen   = $_POST['imagen'];
+$precio = (float)$_POST['precio']; 
+$detalles = $_POST['descripcion'];
+$unidades = (int)$_POST['unidades'];
+$imagen   = $_FILES['imagen']['name'];
 
 /** 2) Verificar duplicado (nombre+marca+modelo) */
 $sql_verificar = "SELECT COUNT(*) AS total
