@@ -6,7 +6,7 @@ var baseJSON = {
     "marca": "NA",
     "detalles": "NA",
     "imagen": "img/default.png"
-};
+  };
 
 // FUNCIÓN CALLBACK DE BOTÓN "Buscar"
 function buscarID(e) {
@@ -64,27 +64,65 @@ function buscarID(e) {
 function agregarProducto(e) {
     e.preventDefault();
 
-    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
-    var productoJsonString = document.getElementById('description').value;
-    // SE CONVIERTE EL JSON DE STRING A OBJETO
-    var finalJSON = JSON.parse(productoJsonString);
-    // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
-    finalJSON['nombre'] = document.getElementById('name').value;
-    // SE OBTIENE EL STRING DEL JSON FINAL
-    productoJsonString = JSON.stringify(finalJSON,null,2);
+    // SE OBTIENE EL JSON DEL FORMULARIO
+    let nombre = document.getElementById("name").value.trim();
+    let descripcion = document.getElementById("description").value.trim();
+
+    // VALIDACIÓN PARA LOS CAMPOS REQUERIDOS
+    let errores = [];
+    if (nombre === "" || nombre.length > 100) {
+        errores.push("El nombre no puede estar vacío y debe tener máximo 100 caracteres.");
+    }
+
+    let producto = {};
+    try {
+        producto = JSON.parse(descripcion);
+        if (!producto.precio || producto.precio <= 99.99) {
+            errores.push("El precio debe ser mayor a 99.99.");
+        }
+        if (!producto.unidades || isNaN(producto.unidades) || producto.unidades < 0) {
+            errores.push("Las unidades deben ser un número mayor o igual a 0.");
+        }
+        if (!producto.modelo || producto.modelo.trim() === "" || producto.modelo.length > 25) {
+            errores.push("El modelo es requerido y debe tener máximo 25 caracteres.");
+        }
+        if (!producto.marca || producto.marca.trim() === "") {
+            errores.push("La marca es requerida.");
+        }
+        if (producto.detalles && producto.detalles.length > 250) {
+            errores.push("Los detalles no pueden exceder los 250 caracteres.");
+        }
+        if (!producto.imagen || producto.imagen.trim() === "") {
+            producto.imagen = "img/default.png";  // Imagen por defecto si no hay ninguna
+        }
+    } catch (error) {
+        errores.push("El JSON proporcionado no es válido.");
+    }
+
+    // MOSTRAR ERRORES SI ES QUE LO HAY
+    if (errores.length > 0) {
+        window.alert("Errores:\n" + errores.join("\n"));
+        return;
+    }
+    producto.nombre = nombre;
 
     // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
-    var client = getXMLHttpRequest();
-    client.open('POST', './backend/create.php', true);
-    client.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    let client = getXMLHttpRequest();
+    client.open("POST", "./backend/create.php", true);
+    client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
     client.onreadystatechange = function () {
-        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
         if (client.readyState == 4 && client.status == 200) {
-            console.log(client.responseText);
+            // MOSTRAMOS EL MENSAJE RECIBIDO DEL SERVIDOR
+            let respuesta = JSON.parse(client.responseText);
+            window.alert(respuesta.mensaje);
         }
     };
-    client.send(productoJsonString);
+
+    // SE ENVÍA EL JSON COMO STRING AL SERVIDOR
+    client.send(JSON.stringify(producto));
 }
+
 
 // SE CREA EL OBJETO DE CONEXIÓN COMPATIBLE CON EL NAVEGADOR
 function getXMLHttpRequest() {
@@ -121,6 +159,7 @@ function init() {
     document.getElementById("description").value = JsonString;
 }
 
+// FUNCIÓN CALLBACK DE BOTÓN "Buscar Producto"
 function buscarProducto(e) {
     e.preventDefault();
 
