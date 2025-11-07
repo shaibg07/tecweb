@@ -2,6 +2,9 @@
 $(document).ready(function () {
     let edit = false;
 
+    $('#product-result').hide();
+    listarProductos();
+
     function setError($input, msg) {
         $input.addClass('is-invalid');
         $input.siblings('.invalid-feedback').text(msg).show();
@@ -54,11 +57,66 @@ $(document).ready(function () {
         else clearError($el);
     });
 
+    let timerNombre = null;
+    $('#name').on('keyup blur', function () {
+        const $el = $(this);
+        const nombre = $el.val().trim();
+        const currentProductId = $('#productId').val(); // ID actual si estamos editando
+
+        if (nombre.length === 0) {
+            clearError($el); // La validación síncrona ya maneja este caso
+            $('#product-result').hide(); // Ocultar barra de estado si está vacía
+            return;
+        }
+
+        clearTimeout(timerNombre);
+        timerNombre = setTimeout(function () {
+            // Revisa si ya está marcado como inválido por la validación síncrona (longitud, vacío, etc.)
+            if ($el.hasClass('is-invalid')) return; 
+
+            // Llamada AJAX para buscar el nombre
+            $.ajax({
+                url: './backend/product-search.php',
+                type: 'GET',
+                data: { search: nombre },
+                success: function (resp) {
+                    let arr = [];
+                    try { arr = JSON.parse(resp) || []; } catch (e) { }
+
+                    // Buscamos si hay un nombre **exacto** que no sea el producto que estamos editando
+                    const existe = arr.some(p => 
+                        (p.nombre || '').toLowerCase() === nombre.toLowerCase() && 
+                        p.id != currentProductId
+                    );
+
+                    if (existe) {
+                        $el.addClass('is-invalid');
+                        const template_bar = `
+                            <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" ya existe :(</li>
+                        `;
+                        $('#product-result').show(); 
+                        $('#container').html(template_bar);
+                    } else {
+                        // Si no existe y pasó la validación síncrona:
+                        $el.removeClass('is-invalid');
+                        const template_bar = `
+                            <li style="list-style:none;font-weight:bold;">El nombre "${nombre}" sin coincidencias :)</li>
+                        `;
+                        $('#product-result').show(); 
+                        $('#container').html(template_bar);
+                    }
+                }
+            });
+        }, 300); // Esperar 300ms después de la última tecla
+    });
+
+
     function mostrarErrores(errores) {
         let template_bar = '<li style="list-style:none; font-weight:bold;">Error de envío:</li>';
         errores.forEach(err => {
             template_bar += `<li style="list-style:none;">${err}</li>`;
         });
+
         $('#product-result').show();
         $('#container').html(template_bar);
     }
@@ -108,6 +166,7 @@ $(document).ready(function () {
                 success: function (response) {
                     if (!response.error) {
                         const productos = JSON.parse(response);
+                        
                         if (Object.keys(productos).length > 0) {
                             let template = '';
                             let template_bar = '';
@@ -140,7 +199,11 @@ $(document).ready(function () {
                             $('#product-result').show();
                             $('#container').html(template_bar);
                             $('#products').html(template);
-                        }
+                        }else {
+                            // AGREGAR: Lógica cuando no hay coincidencias
+                            $('#product-result').hide(); // Ocultar barra de estado
+                            $('#container').html(''); // Limpiar contenido de la barra
+                            $('#products').html('<tr><td colspan="4" class="text-center">No se encontraron coincidencias.</td></tr>'); }// Limpiar la tabla y poner un mensaje
                     }
                 }
             });
@@ -152,6 +215,22 @@ $(document).ready(function () {
 
     $('#product-form').submit(e => {
         e.preventDefault();
+
+    $('#name').trigger('blur');
+    $('#marca').trigger('change');
+    $('#modelo').trigger('blur');
+    $('#precio').trigger('blur');
+    $('#unidades').trigger('blur');
+    $('#detalles').trigger('blur');
+    $('#imagen').trigger('blur');
+
+    if ($('.form-control.is-invalid').length > 0) {
+        // Puedes mantener un mensaje general si quieres, o simplemente no mostrar nada
+        // ya que los errores individuales ya están visibles.
+        // mostrarErrores(["Por favor, corrige los errores en los campos marcados."]);
+        $('#product-result').hide(); // Asegurarse de que la barra de estado general esté oculta
+        return; // Detener el envío del formulario
+    }
 
         let postData = {
             nombre: $('#name').val(),
@@ -184,9 +263,8 @@ $(document).ready(function () {
 
         if (errores.length > 0) {
             mostrarErrores(errores);
-            return; // detenemos el envío
+            return; 
         }
-        // FIN DE VALIDACIONES
 
         const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
 
@@ -194,9 +272,8 @@ $(document).ready(function () {
             let respuesta = JSON.parse(response);
             let template_bar = '';
             template_bar += `
-                        <li style="list-style: none;">status: ${respuesta.status}</li>
-                        <li style="list-style: none;">message: ${respuesta.message}</li>
-                    `;
+                        <li style="list-style: none;">status: ${respuesta.status}</li>
+                        <li style="list-style: none;">message: ${respuesta.message}</li>`;
             $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
             $('#productId').val('');
 
