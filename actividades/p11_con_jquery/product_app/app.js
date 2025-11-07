@@ -1,179 +1,201 @@
-// JSON BASE A MOSTRAR EN FORMULARIO
-var baseJSON = {
-  "precio": 0.0,
-  "unidades": 1,
-  "modelo": "XX-000",
-  "marca": "NA",
-  "detalles": "NA",
-  "imagen": "img/default.png"
-};
+// app.js
+$(document).ready(function () {
+    let edit = false;
 
-function init() {
-  // Convierte el JSON a string para poder mostrarlo
-  var JsonString = JSON.stringify(baseJSON, null, 2);
-  console.log("Ejecutando init():", JsonString);
-  document.getElementById("description").value = JsonString;
-  $('#product-result').hide();
-}
+    $('#product-result').hide();
+    listarProductos();
 
-$(document).ready(function() {
-  let edit = false; // Bandera para saber si se está en modo edición
-  init();
-fetchProducts();
-  // Evento keyup para el campo de búsqueda
-  $('#search').keyup(function(e) {
-    var search = $('#search').val().trim();
-    // Si no hay búsqueda, mostramos la lista completa
-    if (search === '') {
-      fetchProducts();
-      $('#product-result').hide();
-      $('#container').html('');
-      return;
-    }
-    $.ajax({
-      url: 'backend/product-search.php',
-      type: 'GET',
-      data: { search: search },
-      success: function(response) {
-        var products = JSON.parse(response);
-        var listTemplate = '';
-        var tableTemplate = '';
-        products.forEach(product => {
-          // Construimos la lista para el contenedor (si lo deseas)
-          listTemplate += `<li><a href="#" class="product-item">${product.nombre}</a></li>`;
-          // Construimos las filas de la tabla
-          tableTemplate += `
-            <tr productId="${product.id}">
-              <td>${product.id}</td>
-              <td><a href="#" class="product-item">${product.nombre}</a></td>
-              <td>${product.detalles}</td>
-              <td><button class="product-delete btn btn-danger">Eliminar</button></td>
-            </tr>
-          `;
+    // Función auxiliar para gestionar la barra de estado con errores (Punto 5.2, 6)
+    function mostrarErrores(errores) {
+        let template_bar = '<li style="list-style:none; font-weight:bold;">Error de envío:</li>';
+        errores.forEach(err => {
+            template_bar += `<li style="list-style:none;">${err}</li>`;
         });
-        $('#product-result').show();
-        $('#container').html(listTemplate);
-        $('#products').html(tableTemplate);
-      }
-    });
-  });
-
-
-  // Evento de envío del formulario
-  $('#product-form').submit(function(e) { 
-    e.preventDefault();
-    let postData = JSON.parse($('#description').val());
-    postData['nombre'] = $('#name').val();
-    postData['id'] = $('#productId').val();
-
-    $('button.btn-primary').text("Agregar Producto");
-    let url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
-
-
-
-    $.ajax({
-      url: url,
-      type: 'POST',
-      data: JSON.stringify(postData),
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json', // Esto fuerza a jQuery a parsear la respuesta como JSON
-      success: function(response) {
-        //console.log("Respuesta del servidor:", response);
-        let template_bar = `
-          <li style="list-style-type:none;">status: ${response.status}</li>
-          <li style="list-style-type:none;">message: ${response.message}</li>
-        `;
-        $('#name').val('');
-        init(); // Restaura el JSON base en el textarea
         $('#product-result').show();
         $('#container').html(template_bar);
-        fetchProducts();
-        edit = false;
-      },
-      error: function(xhr, status, error) {
-        // En caso de que la petición no se realice correctamente (por ejemplo, error HTTP)
-        let template_bar = `
-          <li style="list-style-type:none;">status: error</li>
-          <li style="list-style-type:none;">message: ${error}</li>
-        `;
-        $('#product-result').show();
-        $('#container').html(template_bar);
-      }
-    });
-  });
-
- // Fin de submit
-    // Función para obtener y mostrar la lista de productos
-    function fetchProducts() {
-      $.ajax({
-        url: 'backend/product-list.php',
-        type: 'GET',
-        success: function(response) {
-          let products = JSON.parse(response);
-          let template = '';
-          products.forEach(product => {
-            template += `
-            <tr productId="${product.id}">
-              <td>${product.id}</td>
-              <td>
-              <a href="#" class="product-item">
-              ${product.nombre}
-              </a>
-              </td>
-              <td>${product.detalles}</td>
-              <td>
-                <button class="product-delete btn btn-danger">Eliminar</button>
-                <button class="product-edit btn btn-warning">Editar</button>
-              </td>
-            </tr>
-            `;
-          });
-          $('#products').html(template);
-        }
-      });
     }
-    // Evento para eliminar un producto
-    $(document).on('click', '.product-delete', function() {
-      if(confirm('¿Estas seguro de eliminar este elemento?')) {
-        const id = $(this).closest('tr').attr('productId');
-        $.get('backend/product-delete.php', {id}, (response) => {
-          const result = JSON.parse(response); 
-          let template_bar = `
-          <li style="list-style-type:none;">status: ${result.status}</li>
-          <li style="list-style-type:none;">message: ${result.message}</li>
-        `;
-            //alert(result.message);
-            $('#product-result').show();
-            $('#container').html(template_bar);
-            fetchProducts();
+
+    function listarProductos() {
+        $.ajax({
+            url: './backend/product-list.php',
+            type: 'GET',
+            success: function (response) {
+                const productos = JSON.parse(response);
+                if (Object.keys(productos).length > 0) {
+                    let template = '';
+                    productos.forEach(producto => {
+                        let descripcion = '';
+                        descripcion += '<li>precio: ' + producto.precio + '</li>';
+                        descripcion += '<li>unidades: ' + producto.unidades + '</li>';
+                        descripcion += '<li>modelo: ' + producto.modelo + '</li>';
+                        descripcion += '<li>marca: ' + producto.marca + '</li>';
+                        descripcion += '<li>detalles: ' + producto.detalles + '</li>';
+
+                        template += `
+                            <tr productId="${producto.id}">
+                                <td>${producto.id}</td>
+                                <td><a href="#" class="product-item">${producto.nombre}</a></td>
+                                <td><ul>${descripcion}</ul></td>
+                                <td>
+                                    <button class="product-delete btn btn-danger" onclick="eliminarProducto()">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#products').html(template);
+                }
+            }
         });
+    }
+
+    $('#search').keyup(function () {
+        if ($('#search').val()) {
+            let search = $('#search').val();
+            $.ajax({
+                url: './backend/product-search.php?search=' + $('#search').val(),
+                data: { search },
+                type: 'GET',
+                success: function (response) {
+                    if (!response.error) {
+                        const productos = JSON.parse(response);
+                        if (Object.keys(productos).length > 0) {
+                            let template = '';
+                            let template_bar = '';
+
+                            productos.forEach(producto => {
+                                let descripcion = '';
+                                descripcion += '<li>precio: ' + producto.precio + '</li>';
+                                descripcion += '<li>unidades: ' + producto.unidades + '</li>';
+                                descripcion += '<li>modelo: ' + producto.modelo + '</li>';
+                                descripcion += '<li>marca: ' + producto.marca + '</li>';
+                                descripcion += '<li>detalles: ' + producto.detalles + '</li>';
+
+                                template += `
+                                    <tr productId="${producto.id}">
+                                        <td>${producto.id}</td>
+                                        <td><a href="#" class="product-item">${producto.nombre}</a></td>
+                                        <td><ul>${descripcion}</ul></td>
+                                        <td>
+                                            <button class="product-delete btn btn-danger">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+
+                                template_bar += `
+                                    <li>${producto.nombre}</il>
+                                `;
+                            });
+                            $('#product-result').show();
+                            $('#container').html(template_bar);
+                            $('#products').html(template);
+                        }
+                    }
+                }
+            });
         }
-        });
-    // Evento para editar un producto
-    $(document).on('click', '.product-edit', function() {
-      let element = $(this)[0].parentElement.parentElement;
-      let id = $(element).attr('productId');
-      $.post('backend/product-single.php', { id }, function(response) {
-        // Asigna el nombre al input correspondiente y el id al campo oculto
-        $('button.btn-primary').text("Modificar Producto");
-        $('#name').val(response.nombre);
-        $('#productId').val(response.id);
-
-        // Se crea un nuevo objeto quitando 'id' y 'nombre'
-        let { id, nombre, ...productData } = response;
-
-        // Ahora se muestra en el textarea solo el resto de la información
-        $('#description').val(JSON.stringify(productData, null, 2));
-        edit = true;
-      }, 'json');
-      let template_bar = `
-          <li style="list-style-type:none;">status: ${response.status}</li>
-          <li style="list-style-type:none;">message: ${response.message}</li>
-        `;
-            //alert(result.message);
-            $('#product-result').show();
-            $('#container').html(template_bar);
-            fetchProducts();
+        else {
+            $('#product-result').hide();
+        }
     });
 
+    $('#product-form').submit(e => {
+        e.preventDefault();
+
+        let postData = {
+            nombre: $('#name').val(),
+            marca: $('#marca').val(),
+            modelo: $('#modelo').val(),
+            precio: $('#precio').val(),
+            unidades: $('#unidades').val(),
+            detalles: $('#detalles').val(),
+            imagen: $('#imagen').val(),
+            id: $('#productId').val()
+        };
+
+        // INICIO DE VALIDACIONES (Punto 5.2)
+        let errores = [];
+
+        if (postData.nombre.trim() === '' || postData.nombre.length > 100)
+            errores.push('->El nombre es obligatorio y de máximo 100 caracteres.');
+        if (postData.marca.trim() === '')
+            errores.push('->Selecciona una marca.');
+        if (postData.modelo.trim() === '')
+            errores.push('->Modelo requerido.');
+        const precioNum = parseFloat(postData.precio);
+        if (isNaN(precioNum) || precioNum <= 99.99)
+            errores.push('->Precio debe ser mayor a 99.99.');
+        const unidadesNum = parseInt(postData.unidades);
+        if (isNaN(unidadesNum) || unidadesNum < 0)
+            errores.push('->Unidades deben ser 0 o más.');
+        if ((postData.detalles || '').length > 250)
+            errores.push('->Detalles menor a 250 caracteres.');
+
+        if (errores.length > 0) {
+            mostrarErrores(errores);
+            return; // detenemos el envío
+        }
+        // FIN DE VALIDACIONES
+
+        const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
+
+        $.post(url, postData, (response) => {
+            let respuesta = JSON.parse(response);
+            let template_bar = '';
+            template_bar += `
+                        <li style="list-style: none;">status: ${respuesta.status}</li>
+                        <li style="list-style: none;">message: ${respuesta.message}</li>
+                    `;
+            $('#name, #marca, #modelo, #precio, #unidades, #detalles, #imagen').val('');
+            $('#productId').val('');
+
+            $('#product-result').show();
+            $('#container').html(template_bar);
+            listarProductos();
+            edit = false;
+
+            // PUNTO 3: Cambiar texto del botón a "Agregar Producto"
+            $('button.btn-primary').text('Agregar Producto');
+
+            // Limpiar los estados de error después de un envío exitoso
+            $('.form-control').removeClass('is-invalid');
+        });
+    });
+
+    $(document).on('click', '.product-delete', (e) => {
+        if (confirm('¿Realmente deseas eliminar el producto?')) {
+            const element = $(this)[0].activeElement.parentElement.parentElement;
+            const id = $(element).attr('productId');
+            $.post('./backend/product-delete.php', { id }, (response) => {
+                $('#product-result').hide();
+                listarProductos();
+            });
+        }
+    });
+
+    $(document).on('click', '.product-item', (e) => {
+        const element = $(this)[0].activeElement.parentElement.parentElement;
+        const id = $(element).attr('productId');
+        $.post('./backend/product-single.php', { id }, (response) => {
+            let product = JSON.parse(response);
+            $('#name').val(product.nombre);
+            $('#productId').val(product.id);
+            
+            $('#marca').val(product.marca || '');
+            $('#modelo').val(product.modelo || '');
+            $('#precio').val(product.precio || '');
+            $('#unidades').val(product.unidades || '');
+            $('#detalles').val(product.detalles || '');
+            $('#imagen').val(product.imagen || '');
+
+            edit = true;
+
+            // PUNTO 2: Cambiar texto del botón a "Modificar Producto"
+            $('button.btn-primary').text("Modificar Producto");
+        });
+        e.preventDefault();
+    });
 });
