@@ -2,10 +2,58 @@
 $(document).ready(function () {
     let edit = false;
 
-    $('#product-result').hide();
-    listarProductos();
+    function setError($input, msg) {
+        $input.addClass('is-invalid');
+        $input.siblings('.invalid-feedback').text(msg).show();
+    }
+    function clearError($input) {
+        $input.removeClass('is-invalid');
+        $input.siblings('.invalid-feedback').text('').hide();
+    }
 
-    // Función auxiliar para gestionar la barra de estado con errores (Punto 5.2, 6)
+    $('#name').on('blur input', function () {
+        const $el = $(this);
+        const v = $el.val().trim();
+        if (v === '' || v.length > 100) setError($el, 'El nombre es obligatorio y de máximo 100 caracteres.');
+        else clearError($el);
+    });
+
+    $('#marca').on('blur change', function () {
+        const $el = $(this);
+        if ($el.val().trim() === '') setError($el, 'Selecciona una marca.');
+        else clearError($el);
+    });
+
+    $('#modelo').on('blur input', function () {
+        const $el = $(this);
+        const v = $el.val().trim();
+        // Validación de modelo alfanumérico simple y longitud
+        if (v === '' || v.length > 25 || !/^[a-zA-Z0-9\s-]+$/.test(v))
+            setError($el, 'Modelo requerido, alfanumérico, máximo 25.');
+        else clearError($el);
+    });
+
+    $('#precio').on('blur input', function () {
+        const $el = $(this);
+        const v = parseFloat($el.val());
+        if (isNaN(v) || v <= 99.99) setError($el, 'El precio debe ser mayor a $99.99.');
+        else clearError($el);
+    });
+
+    $('#unidades').on('blur input', function () {
+        const $el = $(this);
+        const v = parseInt($el.val());
+        if (isNaN(v) || v < 0) setError($el, 'Las unidades deben ser 0 o más.');
+        else clearError($el);
+    });
+
+    $('#detalles').on('blur input', function () {
+        const $el = $(this);
+        const v = $el.val();
+        if (v.length > 250) setError($el, 'Máximo 250 caracteres.');
+        else clearError($el);
+    });
+
     function mostrarErrores(errores) {
         let template_bar = '<li style="list-style:none; font-weight:bold;">Error de envío:</li>';
         errores.forEach(err => {
