@@ -6,9 +6,9 @@
 
     class Products extends DataBase {
         private $data = NULL;
-        public function __construct($user='root', $pass='Tec&12Web', $db){
+        public function __construct($db, $user='root', $pass='Tec&12Web'){
             $this->data= array();
-            parent::__construct($user, $pass, $db);
+            parent::__construct($db, $user, $pass);
         }
 
         public function list(){
@@ -34,9 +34,105 @@
                 }
                 $this->conexion->close(); 
         }
-    public function getData(){
-        header('Content-Type: application/json');
-        return json_encode($this->data, JSON_PRETTY_PRINT); 
-    }
+        public function getData(){
+            header('Content-Type: application/json');
+            return json_encode($this->data, JSON_PRETTY_PRINT); 
+        }
+
+        public function add ($prod){
+            $this->data= $prod; 
+        
+            $producto = file_get_contents('php://input');
+            $this->data = array(
+                'status'  => 'error',
+                'message' => 'Ya existe un producto con ese nombre' 
+            );
+            if(!empty($producto)) {
+                // SE TRANSFORMA EL STRING DEL JASON A OBJETO
+                $jsonOBJ = json_decode($producto);
+                // SE ASUME QUE LOS DATOS YA FUERON VALIDADOS ANTES DE ENVIARSE
+                $sql = "SELECT * FROM productos WHERE nombre = '{$jsonOBJ->nombre}' AND eliminado = 0";
+                $result = $this->conexion->query($sql);
+                
+                if ($result->num_rows == 0) {
+                    $this->conexion->set_charset("utf8");
+                    $sql = "INSERT INTO productos VALUES (null, '{$jsonOBJ->nombre}', '{$jsonOBJ->marca}', '{$jsonOBJ->modelo}', {$jsonOBJ->precio}, '{$jsonOBJ->detalles}', {$jsonOBJ->unidades}, '{$jsonOBJ->imagen}', 0)";
+                    if($this->conexion->query($sql)){
+                        $this->data['status'] =  "success";
+                        $this->data['message'] =  "Producto agregado";
+                    } else {
+                        $this->data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
+                    }
+                }
+
+                $result->free();
+                // Cierra la conexion
+                $this->conexion->close();
+            }
+        }
+
+        public function delete ($id){
+             // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
+            $this->data = array(
+                'status'  => 'error',
+                'message' => 'La consulta falló'
+            );
+            // SE VERIFICA HABER RECIBIDO EL ID
+            if( isset($_GET['id']) ) {
+                $id = $_GET['id'];
+                // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
+                $sql = "UPDATE productos SET eliminado=1 WHERE id = {$id}";
+                if ( $this->conexion->query($sql) ) {
+                    $this->data['status'] =  "success";
+                    $this->data['message'] =  "Producto eliminado";
+                } else {
+                    $data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
+                }
+                $this->conexion->close();
+            } 
+        }
+
+        public function edit ($da){
+            $this->data= $da;
+            $input = file_get_contents("php://input");
+            $this->data = json_decode($input, true);
+
+            // Verificar que se recibieron los datos necesarios
+            if (!isset($this->data['id'], $this->data['nombre'], $this->data['precio'], $this->data['unidades'], $this->data['modelo'], $this->data['marca'], $this->data['detalles'], $this->data['imagen'])) {
+                echo json_encode(["status" => "error", "message" => "Datos incompletos o inválidos."]);
+                exit;
+            }
+
+            // Extraer datos del array
+            $id = $this->data['id'];
+            $nombre = $this->data['nombre'];
+            $precio = $this->data['precio'];
+            $unidades = $this->data['unidades'];
+            $modelo = $this->data['modelo'];
+            $marca = $this->data['marca'];
+            $detalles = $this->data['detalles'];
+            $imagen = $this->data['imagen'];
+
+            // Preparar la consulta para actualizar el producto
+            $sql = "UPDATE productos SET nombre = ?, precio = ?, unidades = ?, modelo = ?, marca = ?, detalles = ?, imagen = ? WHERE id = ?";
+            if ($stmt = $this->conexion->prepare($sql)) {
+                $stmt->bind_param('sdissssi', $nombre, $precio, $unidades, $modelo, $marca, $detalles, $imagen, $id);
+
+                if ($stmt->execute()) {
+                    if ($stmt->affected_rows > 0) {
+                        echo json_encode(["status" => "success", "message" => "Producto actualizado correctamente."]);
+                    } else {
+                        echo json_encode(["status" => "error", "message" => "No se actualizó el producto. Verifica el ID o los datos."]);
+                    }
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error al ejecutar la consulta: " . $stmt->error]);
+                }
+                $stmt->close();
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error preparando la consulta: " . $this->conexion->error]);
+            }
+
+            $this->conexion->close();
+        }
     }
 ?>
