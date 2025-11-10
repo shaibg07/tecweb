@@ -9,8 +9,8 @@
                 $pass,
                 $db
             );
-            if(!this->conexion){
-                die('¡Bae de datos NO conectada!');
+            if(!$this->conexion){
+                die('¡Base de datos NO conectada!');
             }
         }
     }
