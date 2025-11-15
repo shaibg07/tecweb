@@ -7,12 +7,12 @@ require_once __DIR__ . '/DataBase.php';
 class Products extends DataBase {
     private $data;
 
-    public function __construct($db, $user='root', $pass='12345678a') {
+    public function __construct($db, $user='root', $pass='Tec&12Web') {
         $this->data = array();
         parent::__construct($db, $user, $pass);
     }
 
-    public function add($jsonOBJ) {
+    /*public function add($jsonOBJ) {
         // SE OBTIENE LA INFORMACIÓN DEL PRODUCTO ENVIADA POR EL CLIENTE
         $this->data = array(
             'status'  => 'error',
@@ -38,7 +38,7 @@ class Products extends DataBase {
             // Cierra la conexion
             $this->conexion->close();
         }
-    }
+    }*/
 
     public function delete($id) {
         // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON

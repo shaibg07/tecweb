@@ -1,6 +1,4 @@
 <?php
-namespace TECWEB\MYAPI;
-
 abstract class DataBase {
     protected $conexion;
 
@@ -18,9 +16,12 @@ abstract class DataBase {
         if(!$this->conexion) {
             die('¡Base de datos NO conextada!');
         }
-        /*else {
-            echo 'Base de datos encontrada';
-        }*/
+        $this->data = [];
+    }
+
+    public function getData() {
+        // SE HACE LA CONVERSIÓN DE ARRAY A JSON
+        return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 }
 ?>
