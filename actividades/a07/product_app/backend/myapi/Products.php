@@ -71,26 +71,43 @@
             }
         }
 
-        public function delete ($id){
-             // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
-            $this->data = array(
-                'status'  => 'error',
-                'message' => 'La consulta falló'
-            );
-            // SE VERIFICA HABER RECIBIDO EL ID
-            if( isset($_GET['id']) ) {
-                $id = $_GET['id'];
-                // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
-                $sql = "UPDATE productos SET eliminado=1 WHERE id = {$id}";
-                if ( $this->conexion->query($sql) ) {
+        public function delete ($id_param){ // El ID se espera recibir en el cuerpo de la petición (POST)
+    // 1. Inicializa el arreglo de respuesta
+    $this->data = array(
+        'status'  => 'error',
+        'message' => 'El ID del producto no fue recibido o es inválido.'
+    );
+    
+    // 2. Verifica haber recibido el ID a través de $_POST (como en tu código procedural)
+    if( isset($_POST['id']) ) {
+        // Sanitiza y convierte a entero. Esto reemplaza $id = $_POST['id'];
+        $id = (int)$_POST['id']; 
+        
+        // 3. Consulta preparada: UPDATE productos SET Eliminado=1
+        $sql = "UPDATE productos SET Eliminado=1 WHERE id = ?";
+        
+        if ( $stmt = $this->conexion->prepare($sql) ) {
+            $stmt->bind_param('i', $id); // 'i' para entero
+            
+            if ( $stmt->execute() ) {
+                if ($stmt->affected_rows > 0) {
                     $this->data['status'] =  "success";
-                    $this->data['message'] =  "Producto eliminado";
+                    $this->data['message'] =  "Producto eliminado correctamente (Soft Delete).";
                 } else {
-                    $data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
+                    $this->data['message'] = "ERROR: El producto con ID {$id} no existe o ya estaba eliminado.";
                 }
-                $this->conexion->close();
-            } 
+            } else {
+                $this->data['message'] = "ERROR al ejecutar: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            $this->data['message'] = "ERROR al preparar la consulta: " . $this->conexion->error;
         }
+        
+        // 4. Cierra la conexión
+        $this->conexion->close();
+    } 
+}
 
         public function edit ($da){
             $this->data= $da;

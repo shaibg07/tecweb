@@ -24,4 +24,12 @@
     // SE HACE LA CONVERSIÓN DE ARRAY A JSON
     echo json_encode($data, JSON_PRETTY_PRINT);
     */
+    use TECWEB\MYAPI\Products as Products; 
+    require_once __DIR__.'/myapi/Products.php'; 
+    
+    $id = isset($_GET['id']) ? $_GET['id'] : '';
+    $prodObj = new Products('marketzone'); 
+    $prodObj->delete($id);
+    
+    echo json_encode ($prodObj->getData());
 ?>
