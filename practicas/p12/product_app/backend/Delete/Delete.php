@@ -1,5 +1,6 @@
 <?php
 namespace Tecweb\backend\Delete;
+use Tecweb\backend\DataBase;
 
 
 class Delete extends DataBase{

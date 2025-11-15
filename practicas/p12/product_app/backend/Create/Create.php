@@ -1,5 +1,6 @@
 <?php
 namespace Tecweb\backend\Create;
+use Tecweb\backend\DataBase;
 
 class Create extends DataBase{
     public function __construct($db, $user='root', $pass='Tec&12Web')

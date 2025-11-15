@@ -1,6 +1,6 @@
 <?php
 namespace Tecweb\backend\Update;
-
+use Tecweb\backend\DataBase;
 
 class Update extends DataBase
 {
