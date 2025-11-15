@@ -9,12 +9,12 @@ class ComposerStaticInit4e4a3667fd4991e7e0b63354c4d7d39d
     public static $prefixLengthsPsr4 = array (
         'T' =>
         array (
-            'TecWeb\\' => 7,
+            'TECWEB\\BACKEND\\' => 15,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'TecWeb\\' =>
+        'TECWEB\\BACKEND\\' =>
         array (
             0 => __DIR__ . '/../..' . '/backend',
         ),
@@ -22,6 +22,11 @@ class ComposerStaticInit4e4a3667fd4991e7e0b63354c4d7d39d
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'TECWEB\\BACKEND\\Create\\Create' => __DIR__ . '/../..' . '/backend/Create/Create.php',
+        'TECWEB\\BACKEND\\DataBase\\DataBase' => __DIR__ . '/../..' . '/backend/DataBase/DataBase.php',
+        'TECWEB\\BACKEND\\Delete\\Delete' => __DIR__ . '/../..' . '/backend/Delete/Delete.php',
+        'TECWEB\\BACKEND\\Read\\Read' => __DIR__ . '/../..' . '/backend/Read/Read.php',
+        'TECWEB\\BACKEND\\Update\\Update' => __DIR__ . '/../..' . '/backend/Update/Update.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

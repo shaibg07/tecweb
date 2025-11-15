@@ -1,7 +1,8 @@
 {
     "autoload": {
-        "psr-4": {
-            "TecWeb\\": "backend"
-        }
+    "psr-4": {
+        "TECWEB\\BACKEND\\": "backend/"
     }
+}
+
 }

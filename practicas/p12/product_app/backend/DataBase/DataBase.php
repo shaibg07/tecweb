@@ -1,5 +1,5 @@
 <?php
-namespace Tecweb\backend\DataBase;
+namespace TECWEB\BACKEND\DataBase;
 
 abstract class DataBase {
     protected $conexion;
