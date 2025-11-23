@@ -9,7 +9,7 @@
 
     $app->setBasePath("/tecweb/practicas/p13");
 
-    $app->get('/', function (Request $request, Response $response) {
+    $app->get('/', function (Request $request, Response $response, $args) {
         
         $response->getBody()->write("Hola Mundo Slim!!");
         
@@ -32,6 +32,19 @@
         $response->getBody()->write("Valores: " . $val1 . " " . $val2);
         
         return $response; 
+    });
+
+    $app->get("/testjson", function(Request $request, Response $response, $args){
+        
+        $data = [
+            ["nombre" => "Shai", "apellidos" => "Banuelos Garcia"],
+            ["nombre" => "Maru", "apellidos" => "Gonzales Palacios"]
+        ];
+        $payload = json_encode($data, JSON_PRETTY_PRINT);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write($payload);
+        
+        return $response;
     });
 
     $app->run();
