@@ -16,6 +16,13 @@
         return $response;
     });
 
+    $app->get("/hola[/{nombre}]", function(Request $request, Response $response, $args){
+        $nombre = $args['nombre'] ?? 'Invitado'; 
+        $response->getBody()->write("Hola, " . $nombre); 
+        
+        return $response; 
+    });
+
     $app->run();
 ?>
 
