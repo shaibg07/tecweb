@@ -4,6 +4,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use TECWEB\BACKEND\Read\Read;
 use TECWEB\BACKEND\Create\Create;
+use TECWEB\BACKEND\Update\Update;
+use TECWEB\BACKEND\Delete\Delete;
 require '../vendor/autoload.php';
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
@@ -40,6 +42,22 @@ $app->post('/product', function(Request $request, Response $response) {
     $response->getBody()->write($productos->getData());
     return $response->withHeader('Content-Type', 'application/json');
 });
+//para editar
+$app->put('/product', function(Request $request, Response $response) {
+    $data = json_decode(json_encode($request->getParsedBody()));
+    $productos = new Update('marketzone');
+    $productos->edit($data);
+    $response->getBody()->write($productos->getData());
+    return $response->withHeader('Content-Type', 'application/json');
+});
 
+//para eliminar
+$app->delete('/product', function(Request $request, Response $response) {
+    $data = json_decode(json_encode($request->getParsedBody()));
+    $productos = new Delete('marketzone');
+    $productos->delete($data->id);
+    $response->getBody()->write($productos->getData());
+    return $response->withHeader('Content-Type', 'application/json');
+});
 $app->run();
 ?>
