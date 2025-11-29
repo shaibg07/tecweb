@@ -28,6 +28,7 @@ $app->get('/products', function(Request $request, Response $response) {
 $app->get('/products/{search}', function(Request $request, Response $response, $args) {
     $productos = new Read('marketzone');
     $productos->search($args['search']);
+    $response->getBody()->write($productos->getData());
     return $response->withHeader('Content-Type', 'application/json');
 });
 
