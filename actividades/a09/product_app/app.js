@@ -11,8 +11,6 @@ var baseJSON = {
 $(document).ready(function(){
     let edit = false;
 
-    let JsonString = JSON.stringify(baseJSON,null,2);
-    $('#description').val(JsonString);
     $('#product-result').hide();
     listarProductos();
 
@@ -22,15 +20,10 @@ $(document).ready(function(){
             type: 'GET',
             dataType: 'json',
             success: function(productos) {
-                // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-                //const productos = JSON.parse(response);
-                //console.log("Respuesta cruda:", response); 
                 if(Object.keys(productos).length > 0) {
-                    // SE CREA UNA PLANTILLA PARA CREAR LAS FILAS A INSERTAR EN EL DOCUMENTO HTML
                     let template = '';
 
                     productos.forEach(producto => {
-                        // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCTO
                         let descripcion = '';
                         descripcion += '<li>precio: '+producto.precio+'</li>';
                         descripcion += '<li>unidades: '+producto.unidades+'</li>';
@@ -51,7 +44,6 @@ $(document).ready(function(){
                             </tr>
                         `;
                     });
-                    // SE INSERTA LA PLANTILLA EN EL ELEMENTO CON ID "productos"
                     $('#products').html(template);
                 }
             }
@@ -108,10 +100,17 @@ $(document).ready(function(){
     $('#product-form').submit(e => {
         e.preventDefault();
     
-        // Convierte el textarea en objeto
-        const postData = JSON.parse($('#description').val());
-        postData.nombre = $('#name').val();
-        postData.id     = $('#productId').val();  // "" cuando es alta
+        // Construye el objeto desde los campos individuales
+        const postData = {
+            nombre: $('#name').val(),
+            marca: $('#marca').val(),
+            modelo: $('#modelo').val(),
+            precio: $('#precio').val(),
+            detalles: $('#detalles').val(),
+            unidades: $('#unidades').val(),
+            imagen: $('#imagen').val() || 'img/default.png',
+            id: $('#productId').val()
+        };
     
         const url    = 'http://localhost/tecweb/actividades/a09/product_app/backend/product';
         const method = edit ? 'PUT' : 'POST';
@@ -126,8 +125,17 @@ $(document).ready(function(){
                 const template_bar = `
                     <li style="list-style:none;">status: ${respuesta.status}</li>
                     <li style="list-style:none;">message: ${respuesta.message}</li>`;
+                
+                // Limpia todos los campos
                 $('#name').val('');
-                $('#description').val(JSON.stringify(baseJSON, null, 2));
+                $('#marca').val('');
+                $('#modelo').val('');
+                $('#precio').val('');
+                $('#unidades').val('');
+                $('#detalles').val('');
+                $('#imagen').val('');
+                $('#productId').val('');
+                
                 $('#product-result').show();
                 $('#container').html(template_bar);
                 listarProductos();
@@ -136,9 +144,9 @@ $(document).ready(function(){
         });
     });
 
-    $(document).on('click', '.product-delete', () => {
+    $(document).on('click', '.product-delete', function() {
         if (confirm('¿Realmente deseas eliminar el producto?')) {
-            const element = $(this)[0].activeElement.parentElement.parentElement;
+            const element = $(this).closest('tr');
             const id = $(element).attr('productId');
     
             $.ajax({
@@ -159,8 +167,11 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click', '.product-item', (e) => {
-        const element = $(this)[0].activeElement.parentElement.parentElement;
+    // ✅ FUNCIÓN CORREGIDA: Ahora llena los campos individuales
+    $(document).on('click', '.product-item', function(e) {
+        e.preventDefault();
+        
+        const element = $(this).closest('tr');
         const id = $(element).attr('productId');
     
         $.ajax({
@@ -168,18 +179,18 @@ $(document).ready(function(){
             method: 'GET',
             dataType: 'json',
             success: (product) => {
+                // Llena cada campo individual
                 $('#name').val(product.nombre);
+                $('#marca').val(product.marca);
+                $('#modelo').val(product.modelo);
+                $('#precio').val(product.precio);
+                $('#unidades').val(product.unidades);
+                $('#detalles').val(product.detalles);
+                $('#imagen').val(product.imagen);
                 $('#productId').val(product.id);
-    
-                delete product.nombre;
-                delete product.eliminado;
-                delete product.id;
-    
-                $('#description').val(JSON.stringify(product, null, 2));
+                
                 edit = true;
             }
         });
-        e.preventDefault();
     });
-}
-);
+});
