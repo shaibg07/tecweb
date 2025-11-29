@@ -24,6 +24,13 @@ $app->get('/products', function(Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+//para buscar
+$app->get('/products/{search}', function(Request $request, Response $response, $args) {
+    $productos = new Read('marketzone');
+    $productos->search($args['search']);
+    return $response->withHeader('Content-Type', 'application/json');
+});
+
 // para agregar un producto
 $app->post('/product', function(Request $request, Response $response) {
     $data = json_decode(json_encode($request->getParsedBody()));
@@ -32,5 +39,6 @@ $app->post('/product', function(Request $request, Response $response) {
     $response->getBody()->write($productos->getData());
     return $response->withHeader('Content-Type', 'application/json');
 });
+
 $app->run();
 ?>
